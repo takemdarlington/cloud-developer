@@ -1,53 +1,116 @@
-# Udagram Image Filtering Microservice
-
-Udagram is a simple cloud application developed alongside the Udacity Cloud Engineering Nanodegree. It allows users to register and log into a web client, post photos to the feed, and process photos using an image filtering microservice.
-
-The project is split into three parts:
-1. [The Simple Frontend](/udacity-c3-frontend)
-A basic Ionic client web application which consumes the RestAPI Backend. 
-2. [The RestAPI Feed Backend](/udacity-c3-restapi-feed), a Node-Express feed microservice.
-3. [The RestAPI User Backend](/udacity-c3-restapi-user), a Node-Express user microservice.
-
-## Getting Setup
-
-> _tip_: this frontend is designed to work with the RestAPI backends). It is recommended you stand up the backend first, test using Postman, and then the frontend should integrate.
-
-### Installing Node and NPM
-This project depends on Nodejs and Node Package Manager (NPM). Before continuing, you must download and install Node (NPM is included) from [https://nodejs.com/en/download](https://nodejs.org/en/download/).
-
-### Installing Ionic Cli
-The Ionic Command Line Interface is required to serve and build the frontend. Instructions for installing the CLI can be found in the [Ionic Framework Docs](https://ionicframework.com/docs/installation/cli).
-
-### Installing project dependencies
-
-This project uses NPM to manage software dependencies. NPM Relies on the package.json file located in the root of this repository. After cloning, open your terminal and run:
-```bash
-npm install
-```
->_tip_: **npm i** is shorthand for **npm install**
-
-### Setup Backend Node Environment
-You'll need to create a new node server. Open a new terminal within the project directory and run:
-1. Initialize a new project: `npm init`
-2. Install express: `npm i express --save`
-3. Install typescript dependencies: `npm i ts-node-dev tslint typescript  @types/bluebird @types/express @types/node --save-dev`
-4. Look at the `package.json` file from the RestAPI repo and copy the `scripts` block into the auto-generated `package.json` in this project. This will allow you to use shorthand commands like `npm run dev`
+# Refactor Udagram app into Microservices and Deploy
 
 
-### Configure The Backend Endpoint
-Ionic uses enviornment files located in `./src/enviornments/enviornment.*.ts` to load configuration variables at runtime. By default `environment.ts` is used for development and `enviornment.prod.ts` is used for produciton. The `apiHost` variable should be set to your server url either locally or in the cloud.
+## Second Submission note
+Screenshot of the `kubectl get pod`
+![kubectl](img/getpods.png)
 
-***
-### Running the Development Server
-Ionic CLI provides an easy to use development server to run and autoreload the frontend. This allows you to make quick changes and see them in real time in your browser. To run the development server, open terminal and run:
+## How to Run Project
 
-```bash
-ionic serve
-```
+Clone repo:
 
-### Building the Static Frontend Files
-Ionic CLI can build the frontend into static HTML/CSS/JavaScript files. These files can be uploaded to a host to be consumed by users on the web. Build artifacts are located in `./www`. To build from source, open terminal and run:
-```bash
-ionic build
-```
-***
+` git clone -b 06-ci https://github.com/naoussi/cloud-developer.git`
+
+- Install dependencies for the frontend, 
+    - navigate to the directory _cloud-developer/course-03/exercises/udacity-c3-frontend_
+    - Run `npm install` to install dependencies
+    - If you don't haver ionic setup on your system, run `npm install -g ionic`
+    - You can run a test on the frontend with the command `npm test`
+    - You can startup the front end application locally with the command `ionic serve`
+
+- Install dependencies of the feed restapi.
+    - navigate to the directory _cloud-developer/course-03/exercises/udacity-c3-resapi-feed_
+    - Run `npm install` to install dependencies
+    - Run `npm run dev` to run server locally
+
+- Install dependencies of the user restapi.
+    - navigate to the directory _cloud-developer/course-03/exercises/udacity-c3-resapi-user_
+    - Run `npm install` to install dependencies
+    - Run`npm run dev` to run server locally
+
+
+- I created the `prod` branch which will hold the final deployment to production.
+
+
+## Travis Build Screenshot
+
+![travis](img/travis.png)
+
+
+## Setup Docker Environment
+
+You'll need to install docker https://docs.docker.com/install/.
+
+To create, deploy and run the docker images, I simply used the `docker-compose up` command.
+
+- Navigate to the directory _cloud-developer/course03/exercises/udacity-c3-deployement/docker_
+
+- Open a new terminal within the above mentioned docker directory and run:
+
+    1. Build the images: `docker-compose -f docker-compose-build.yaml build --parallel`
+    2. Push the images: `docker-compose -f docker-compose-build.yaml push`
+    3. Run the container: `docker-compose up`
+
+### Run App on Docker
+- Open on the browers the link `localhost:8100`
+
+[docker hub](https://hub.docker.com/u/naoussi) 
+
+![docker hub](img/dockerhub.png)
+
+
+## Setup kubernetes clusters
+
+Install and setup kubeone and terraform
+
+- navigate to the directory _cloud-developer/course03/exercises/udacity-c3-deployement/k8s_
+
+### Creating AWS infrastructure
+- Open a new terminal from this directory and run the following command:
+    1. Initialize terraform: `terraform init`
+    2. `terraform plan`
+    3. `terraform apply`
+    4. `terraform output -json > tf.json`
+  
+### Installing kubernetes
+- Verify kubeone installation: `kubeone config print --full`
+- Copy configuration: `kubeone config print > config.yaml`
+- Install kubernetes cluster: `kubeone install config.yaml --tfjson tf.json`
+- Get Kubeconfig file: `kubectl --kubeconfig=<cluster_name>-kubeconfig`
+- export the KUBECONFIG variable environment variable: `export KUBECONFIG=$PWD/<cluster_name>-kubeconfig` 
+
+### Deploying to kuberbetes
+- `kubectl apply -f backend-feed-deployment.yaml`
+- `kubectl apply -f backend-user-deployment.yaml`
+- `kubectl apply -f frontend-deployment.yaml`
+- `kubectl apply -f reverseproxy-deployment.yaml`
+
+### Adding configurations
+- `kubectl apply -f aws-secret.yaml`
+- `kubectl apply -f env-configmap.yaml`
+- `kubectl apply -f env-secret.yaml`
+
+### Run Kubernetes application on local machine
+
+- Verify pods: kubectl get pod
+- Run reverseproxy server: `kubectl port-forward pod/reverseproxy-xxxxx-xx 8080:8080`
+- Run frontend: `pod/frontend-xxxxxx-xxxx 8100:8100`
+
+### Deploy services on Kubernetes
+- `kubectl apply -f backend-feed-service.yaml`
+- `kubectl apply -f backend-user-service.yaml`
+- `kubectl apply -f frontend-service.yaml`
+- `kubectl apply -f reverseproxy-service.yaml`
+
+
+
+## Monitoring
+Screenshot of application on Amazon Cloudwatch:
+
+
+![cloudwatch](img/cloudwatch1.png)
+
+
+## References
+- [Kubeone](https://github.com/kubermatic/kubeone)
+- [Kubernetes clusters on AWS using KubeOne](https://www.loodse.com/blog/2019-07-25-running-ha-kubernetes/)
