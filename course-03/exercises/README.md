@@ -1,10 +1,6 @@
 # Refactor Udagram app into Microservices and Deploy
 
 
-## Second Submission note
-Screenshot of the `kubectl get pod`
-![kubectl](img/getpods.png)
-
 ## How to Run Project
 
 Clone repo:
@@ -30,11 +26,6 @@ Clone repo:
 
 
 - I created the `prod` branch which will hold the final deployment to production.
-
-
-## Travis Build Screenshot
-
-![travis](img/travis.png)
 
 
 ## Setup Docker Environment
@@ -101,14 +92,6 @@ Install and setup kubeone and terraform
 - `kubectl apply -f backend-user-service.yaml`
 - `kubectl apply -f frontend-service.yaml`
 - `kubectl apply -f reverseproxy-service.yaml`
-
-
-
-## Monitoring
-Screenshot of application on Amazon Cloudwatch:
-
-
-![cloudwatch](img/cloudwatch1.png)
 
 
 ## References
