@@ -1,11 +1,24 @@
-# Refactor Udagram app into Microservices and Deploy
+# Refactor Udagram App Into Microservices and Deploy
 
+# Scrrenshots and URLs
+## Travis CI
+![travis](./img/travisci.png)
 
-## How to Run Project
+## Docker Hub
+![docker](./img/dockerhub.png)
+[docker Hub URL](https://hub.docker.com/u/assangah) 
 
-Clone repo:
+## kubectl get pods
+![pods](./img/getpods.png)
 
-` git clone -b 06-ci https://github.com/naoussi/cloud-developer.git`
+## Cloudwatch
+![cloudwatch](./img/cloudwatch1.png)
+
+## How to Run Project Locally
+
+Clone the repo:
+
+` git clone -b 06-ci https://github.com/takemdarlington/cloud-developer.git`
 
 - Install dependencies for the frontend, 
     - navigate to the directory _cloud-developer/course-03/exercises/udacity-c3-frontend_
@@ -24,15 +37,12 @@ Clone repo:
     - Run `npm install` to install dependencies
     - Run`npm run dev` to run server locally
 
-
-- I created the `prod` branch which will hold the final deployment to production.
-
-
+# Docker
 ## Setup Docker Environment
 
-You'll need to install docker https://docs.docker.com/install/.
+[Docker](https://docs.docker.com/install/) installing is prerequisite
 
-To create, deploy and run the docker images, I simply used the `docker-compose up` command.
+To create, deploy and run the docker images, used the `docker-compose up` command.
 
 - Navigate to the directory _cloud-developer/course03/exercises/udacity-c3-deployement/docker_
 
@@ -45,12 +55,8 @@ To create, deploy and run the docker images, I simply used the `docker-compose u
 ### Run App on Docker
 - Open on the browers the link `localhost:8100`
 
-[docker hub](https://hub.docker.com/u/naoussi) 
 
-![docker hub](img/dockerhub.png)
-
-
-## Setup kubernetes clusters
+## Setting up kubernetes clusters
 
 Install and setup kubeone and terraform
 
@@ -97,3 +103,4 @@ Install and setup kubeone and terraform
 ## References
 - [Kubeone](https://github.com/kubermatic/kubeone)
 - [Kubernetes clusters on AWS using KubeOne](https://www.loodse.com/blog/2019-07-25-running-ha-kubernetes/)
+- ...
